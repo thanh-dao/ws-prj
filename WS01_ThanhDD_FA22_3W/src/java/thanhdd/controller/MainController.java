@@ -32,7 +32,8 @@ public class MainController extends HttpServlet {
     private final String INVALID_PAGE = "invalid.html";
     private final String SEARCH_CONTROLLER = "SearchController";
     private final String LOGIN_CONTROLLER = "LoginController";
-
+    private final String UPDATE_CONTROLLER = "UpdateController";
+    private final String DELETE_CONTROLLER = "DeleteController";
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String btnAction = request.getParameter("btnAction");
@@ -45,6 +46,14 @@ public class MainController extends HttpServlet {
             }
             case "search": {
                 url = SEARCH_CONTROLLER;
+                break;
+            }
+            case "UpdateController" : {
+                url = UPDATE_CONTROLLER;
+                break;
+            }
+            case "DeleteController": {
+                url = DELETE_CONTROLLER;
                 break;
             }
             default: {

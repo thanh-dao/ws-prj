@@ -5,8 +5,8 @@
  */
 package thanhdd.controller;
 
-import com.google.gson.Gson;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,10 +21,11 @@ import thanhdd.registration.RegistrationDAO;
  *
  * @author 15tha
  */
-@WebServlet(name = "SearchController", urlPatterns = {"/SearchController"})
-public class SearchController extends HttpServlet {
-    private final String SEARCH_PAGE = "search.html";
-    private final String SHOW_SEARCH_CONTROLLER = "ShowSearchController";
+@WebServlet(name = "DeleteController", urlPatterns = {"/DeleteController"})
+public class DeleteController extends HttpServlet {
+
+    private final String SEARCH_CONTROLLER = "SearchController";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,18 +38,19 @@ public class SearchController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String searchValue = request.getParameter("txtSearch");
-        String url = SEARCH_PAGE;
-        if(!searchValue.isEmpty()){
-            try {
-                request.setAttribute("searchedItems", new RegistrationDAO().search(searchValue));
-                url = SHOW_SEARCH_CONTROLLER + "?searchValue=" + searchValue;
-            } catch (SQLException ex) {
-                Logger.getLogger(SearchController.class.getName()).log(Level.SEVERE, null, ex);
+        String username = request.getParameter("userName");
+        try {
+            boolean isNotError = new RegistrationDAO().delete(username);
+            if (!isNotError) {
+                throw new Exception("Error at DeleteController line 41 while deleting value " + username);
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(DeleteController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        request.getRequestDispatcher(url).forward(request, response);
-        
+        String lastSearchValue = request.getParameter("lastSearchValue");
+        response.sendRedirect(SEARCH_CONTROLLER + "?txtSearch=" + lastSearchValue);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

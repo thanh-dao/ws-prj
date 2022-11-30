@@ -43,27 +43,41 @@ public class ShowUpdateController extends HttpServlet {
             out.println("<title>Update</title>");
             out.println("</head>");
             out.println("<body>");
-            String username = request.getParameter("userName");
             try {
-                RegistrationDTO regist = new RegistrationDAO().search(username).get(0);
-                out.println("username : <input type='text' disable value='" + regist.getUsername() + "'>");
+                String username = request.getParameter("userName");
+                String lastSearchValue = request.getParameter("lastSearchValue");
+                System.out.println(username);
+                RegistrationDTO regist = new RegistrationDAO().searchByUserName(username).get(0);
+                out.println("<form method='GET' action='MainController'>");
+                out.println("username : <input type='text' name='txtUsername' disable value='" + regist.getUsername() + "'>");
                 out.println("<br>");
-                out.println("password : <input type='text' disable value='" + regist.getPassword()+ "'>");
+                out.println("password : <input type='text' name='txtPassword' disable value='" + regist.getPassword() + "'>");
                 out.println("<br>");
-                out.println("last name: <input type='text' disable value='" + regist.getLastName()+ "'>");
+                out.println("last name: <input type='text' name='txtLastName' disable value='" + regist.getLastName() + "'>");
                 out.println("<br>");
-                out.println("role : <label for='admin'>admin</label> <input id='admin' type='radio' name='role' disable  value='0' " 
+                out.println("role : <label for='admin'>admin</label> <input id='admin' type='radio' name='txtRole'  value='1' "
                         + (regist.isRole() ? "checked" : "") + ">");
-                
-                out.println("<label for='user'>user</label> : <input  id='user' type='radio' name='role' disable value='1'"
-                        + (regist.isRole() ? "checked" : "")+ ">");
+
+                out.println("<label for='user'>user</label> <input  id='user' type='radio' name='txtRole' value='0'"
+                        + (!regist.isRole() ? " checked " : "") + ">");
+                System.out.println((regist.isRole() ? " checked " : ""));
                 out.println("<br>");
-                out.print("<input type=\"submit\" name=\"btnAction\" value=\"updateController\">");
+                out.println("<button type=\"submit\" name=\"btnAction\" value=\"UpdateController\">");
+                out.println("Update");
+                out.println("</button>");
+                out.println("<input type='text' hidden name='lastSearchValue' value='" + lastSearchValue.trim() + "'>");
+                out.println("</form>");
             } catch (SQLException ex) {
+                ex.printStackTrace();
+            } catch (IndexOutOfBoundsException ex) {
+                out.println("<br><h1> Not found </h1>");
+            } catch(Exception ex){
+                out.println("Error");
                 ex.printStackTrace();
             }
             out.println("</body>");
             out.println("</html>");
+        
         }
     }
 

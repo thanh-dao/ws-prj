@@ -49,6 +49,7 @@ public class LoginController extends HttpServlet {
             RegistrationDAO registDAO = new RegistrationDAO();
             RegistrationDTO regist = registDAO.checkLogin(username, password);
             if (regist != null) {
+                System.out.println(regist.toJson());
                 Cookie cookie = new Cookie("regist", regist.toJson());
                 response.addCookie(cookie);
                 response.sendRedirect(WELCOME_PAGE);

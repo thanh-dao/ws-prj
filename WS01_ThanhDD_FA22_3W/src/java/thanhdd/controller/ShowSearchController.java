@@ -68,23 +68,44 @@ public class ShowSearchController extends HttpServlet {
                     out.println("<td>" + r.getUsername() + "</td>\n");
                     out.println("<td>" + r.getPassword() + "</td>\n");
                     out.println("<td>" + r.getLastName() + "</td>\n");
-                    out.println("<td>" + r.isRole() + "</td>\n");
+                    out.println("<td>" 
+                            + "<input type=\"checkbox\" disabled " 
+                            + (r.isRole() ? "checked" : "")
+                            + ">"
+                            + "</td>\n");
                     out.println(
-                        "<td>" 
-                        + "<a href='ShowUpdateController?userName=" + r.getUsername() 
-                                + "&lastSearchValue=" + searchValue +
-                                "'> Update </a>"
-                        + "</td>"
+                            "<td>"
+                            + "<a href='ShowUpdateController?userName=" + r.getUsername()
+                            + "&lastSearchValue=" + searchValue
+                            + "' onclick=\"handleAction(this, event)\""
+                            + "> Update </a>"
+                            + "</td>"
                     );
-                    out.println("<td>" + "<a href=ConfirmDeleteController?userName=" + r.getUsername() + "> Delete </a>");
+                    out.println("<td>" + "<a href='DeleteController?userName=" + r.getUsername()
+                            + "&lastSearchValue=" + searchValue
+                            + "' onclick=\"handleAction(this, event)\" "
+                            + "> Delete </a>");
                     out.println("</tr>\n");
                 }
-                out.println(
-                          "</tbody>"
+                out.println("</tbody>"
                         + "</table>");
             } else {
-                out.println("Not found!!!");
+                out.println("<h3>Not found!!!</h3>");
             }
+            out.println("<script>\n"
+                    + "        function handleAction(el, event) {\n"
+                    + "            const action = el.innerHTML.trim();\n"
+                    + "            if(action == 'Update'){\n"
+                    + "                if(!confirm(\"do you want to update this registration? \")){\n"
+                    + "                    event.preventDefault();\n"
+                    + "                }\n"
+                    + "            }else if(action == 'Delete'){\n"
+                    + "                if(!confirm(\"do you want to delete this registration? \")){\n"
+                    + "                    event.preventDefault();\n"
+                    + "                }"
+                    + "            }\n"
+                    + "        }\n"
+                    + "    </script>");
             out.println("</body>");
             out.println("</html>");
         }

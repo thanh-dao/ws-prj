@@ -5,6 +5,8 @@
  */
 package thanhdd.registration;
 
+import com.google.gson.Gson;
+
 public class RegistrationDTO {
 
     private String username;
@@ -55,12 +57,7 @@ public class RegistrationDTO {
     
 
     public String toJson() {
-        return "{"
-                + "\"username\": \"" + username + "\", "
-                + "\"password\": \"" + password + "\", "
-                + "\"lastName\": \"" + lastName + "\", "
-                + "\"role\": \"" + role + "\""
-                + "}";
+        return new Gson().toJson(this);
     }
 
     public RegistrationDTO() {

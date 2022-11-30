@@ -6,12 +6,16 @@
 package thanhdd.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import thanhdd.registration.RegistrationDAO;
+import thanhdd.registration.RegistrationDTO;
 
 /**
  *
@@ -20,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "UpdateController", urlPatterns = {"/UpdateController"})
 public class UpdateController extends HttpServlet {
 
+    
+    private final String SEARCH_CONTROLLER = "SearchController";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -32,18 +38,21 @@ public class UpdateController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UpdateController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet UpdateController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String username = request.getParameter("txtUsername");
+        String password = request.getParameter("txtPassword");
+        String lastName = request.getParameter("txtLastName");
+        String role = request.getParameter("txtRole");
+        
+        System.out.println(role);
+        System.out.println(role.equals("1"));
+        RegistrationDTO r = new RegistrationDTO(username, password, lastName, role.equals("1"));
+        try {
+            new RegistrationDAO().update(r);
+        } catch (SQLException ex) {
+            Logger.getLogger(UpdateController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        String lastSearchValue = request.getParameter("lastSearchValue");
+        response.sendRedirect(SEARCH_CONTROLLER + "?txtSearch=" + lastSearchValue);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
